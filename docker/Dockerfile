@@ -26,4 +26,16 @@ RUN apt-get update \
     ros-${ROS_DISTRO}-rviz2 \
  && rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p /etc/apt/keyrings \
+   && curl -sSf https://librealsense.realsenseai.com/Debian/librealsenseai.asc | \
+   gpg --dearmor | tee /etc/apt/keyrings/librealsenseai.gpg > /dev/null \
+   && echo "deb [signed-by=/etc/apt/keyrings/librealsenseai.gpg] https://librealsense.realsenseai.com/Debian/apt-repo `lsb_release -cs` main" | \
+   tee /etc/apt/sources.list.d/librealsense.list
+
+RUN apt-get update \
+ && apt-get install -y \
+    librealsense2-dkms \
+    librealsense2-utils \
+ && rm -rf /var/lib/apt/lists/*
+
 ARG DEBIAN_FRONTEND=dialog
